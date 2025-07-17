@@ -45,8 +45,8 @@ class Body:
         ay = fy / self.mass
         self.vx += ax * DT
         self.vy += ay * DT
-        self.x += vx * DT
-        self.y += vy * DT
+        self.x += self.vx * DT
+        self.y += self.vy * DT
 
         current_scaling = ZOOM_SCALE if zoomed else SCALE
 
@@ -121,3 +121,26 @@ bodies = [
          7,
          (0, 0, 205)),
 ]
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_z:
+                zoomed = not zoomed
+            
+            for body in bodies:
+                body.trail = []
+            
+    screen.fill((0, 0, 0))
+    for body in bodies:
+        body.update_position(bodies)
+        body.draw()
+
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
